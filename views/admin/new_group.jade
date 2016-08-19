@@ -1,0 +1,10 @@
+extends ../layout
+
+block content
+    h1.
+        #{title}
+    form#formAddBlob(name="adddevice",method="post",action="/tasks/new_group")
+        p Description:
+            input(type="text", name="description")
+        p
+            button#btnSubmit(type="submit") submit

@@ -1,0 +1,211 @@
+extends ../layout
+
+block content
+    head
+        link(href='stylesheets/base.min.css', rel='stylesheet')
+        link(href='stylesheets/project.min.css', rel='stylesheet')
+        link(href='stylesheets/jquery.datetimepicker.min.css', rel='stylesheet')
+        script(src="http://code.jquery.com/jquery-1.11.1.min.js")
+        script(src="http://code.jquery.com/ui/1.11.0/jquery-ui.min.js")
+        script(src="javascripts/jquery.datetimepicker.full.min.js")
+        script(src="javascripts/dropzone.js")
+        script.
+            Dropzone.options.myDropzone = {
+
+                // Prevents Dropzone from uploading dropped files immediately
+                autoProcessQueue: true,
+                parallelUploads: 1,
+                uploadMultiple: false,
+                maxFiles: 1,
+
+                init: function() {
+                    var submitButton = document.querySelector("#submit-all")
+                    myDropzone = this; // closure
+
+                    submitButton.addEventListener("click", function() {
+                        myDropzone.processQueue(); // Tell Dropzone to process all queued files.
+                });
+
+                // You might want to show the submit button only when
+                // files are dropped here:
+                this.on("addedfile", function() {
+                // Show submit button here and/or inform user to click it.
+                });
+
+                }
+            };
+
+            function setDeviceContent(deviceId) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/admin/add_task',
+                    data: $("#setDeviceContentForm").serialize(),
+                    dataType: 'json',
+                    success: function (data) {
+                        $('.device-list-row-expand').remove();
+                        showDeviceTasksForm(data.device, $('.device-list-row'));
+                    }
+                });
+            }
+
+            function __deviceTaskListFormText(deviceId, taskList) {
+                var strTasks = "";
+                for (var i in taskList) {
+                    var task = taskList[i];
+                    strTasks += "<tr><td>" + task.type + "</td><td>" + task.content.resource + "</td><td>" + task.date + "</td>" + "</tr>";
+                }
+                var addScheduleStr = "<tr class='device-list-row-expand'><td></td><td></td><td colspan=4>" +
+                "<table><thead></thead>" +
+                strTasks +
+                "</table>" +
+                "</td></tr>";
+
+                return addScheduleStr;
+            }
+
+            function __deviceTaskAddFormText(deviceId, contentList) {
+                var strOptions = "";
+
+                for (var i in contentList) {
+                    var content = contentList[i];
+                    strOptions += "<option value='"+content._id+"'>" + content.resource + "</option>";
+                }
+                var addScheduleStr = "<tr class='device-list-row-expand'><td></td><td></td><td colspan=4>" +
+                                "<form id='setDeviceContentForm' onsubmit=\"setDeviceContent('');return false;\">" +
+                                "<select name='content'>" +
+                                strOptions +
+                                "</select>" +
+                                "<input type='hidden' name='device' value='"+deviceId+"'>" +
+                                "<input type='text' name='date' id='schedule_date'>" +
+                                "<input type='submit' value='Schedule'>" +
+                                "</form>" +
+                        "</td></tr>";
+
+                return addScheduleStr;
+            }
+
+            function showDeviceTasksForm(deviceId, ele) {
+                $.ajax({
+                    url: '/admin/task_list',
+                    data: {id:deviceId},
+                    dataType: 'json',
+                    success: function (tasksData) {
+                        $.ajax({
+                            url: '/admin/content_list',
+                            data: '',
+                            dataType: 'json',
+                            success: function (data) {
+                                $(ele).after(__deviceTaskListFormText(deviceId, tasksData));
+                                $(ele).after(__deviceTaskAddFormText(deviceId, data));
+                                $('#schedule_date').datetimepicker();
+                            }
+                        });
+                    }
+                });
+            }
+
+            function setDeviceListClickHandler() {
+                $('.device-list-row').click(function () {
+                    $('.device-list-row-expand').remove();
+                    var deviceId = this.id.split('#', 2)[1];
+                    showDeviceTasksForm(deviceId, this);
+                })
+            }
+            function device2tr(device) {
+                return "<tr class='device-list-row' id='device#" + device._id + "'> <td></td>"+
+                        '<td>' + device.serial + '</td>' +
+                        '<td>' + device.description + '</td>' +
+                        '<td>' + device.tags + '</td>' +
+                        '<td>' + device.lastSeen + '</td>' +
+                        '<td>' + device.balance + '</td>' +
+                        '</tr>';
+            }
+            function addDevice(device) {
+                $('#deviceListTableBody').append(device2tr(device));
+                setDeviceListClickHandler();
+            }
+
+            function buildDeviceList(jsonObj) {
+                //var jsonObj = $.parseJSON(data);
+
+                var tableBody = $('#deviceListTableBody');
+                tableBody.empty();
+
+                for (var i in jsonObj) {
+                    var device = jsonObj[i];
+                    tableBody.append(device2tr(device));
+                }
+
+                setDeviceListClickHandler();
+            }
+
+            function postForm(url, formId, loaderFn) {
+                $.ajax( {
+                    type: 'POST',
+                    url: url,
+                    dataType: 'json',
+                    data: $("#"+formId).serialize(),
+                        success: function(data) {
+                            loaderFn(data)
+                    }
+                } );
+            }
+
+            function loadDevices() {
+                $.ajax({
+                    url: '/admin/device_list',
+                    data: '',
+                    dataType: 'json',
+                    success: function (data) {
+                        buildDeviceList(data)
+                    }
+                });
+            }
+
+            $(document).ready(function() {
+                /*$('.edit_device_description').editable('/admin/device_edit', {
+                    name : 'description'
+                });
+
+                $('.edit_device_tags').editable('/admin/device_edit', {
+                    name: 'tags'
+                });*/
+
+                loadDevices();
+                jQuery('#schedule_date').datetimepicker();
+
+                /*var dropzone = new Dropzone(".dropzone");
+                dropzone.on("addedfile", function (file) {
+                });*/
+            });
+    body(class="page-brand")
+        h1.
+            #{title}
+        div(class="table-responsive")
+            table(class="table")
+                thead
+                    tr
+                        th -
+                        th serial
+                        th description
+                        th tags
+                        th last seen
+                        th balance
+                tbody#deviceListTableBody
+
+                tbody#addDeviceTableBody
+                    form#addNewDevice(name="adddevice",method="post",onsubmit="postForm('/admin/new_device', 'addNewDevice', addDevice);return false;")
+                        td
+                        td
+                            input(type="text", name="serial")
+                        td
+                            input(type="text", name="description")
+                        td
+                            input(type="text", name="tags")
+                        td
+                        td
+                            button#btnSubmit(type="submit") add
+
+        button(id="refresh-all", onclick="loadDevices") Refresh
+        form(action="/admin/upload",class="dropzone" id="my-dropzone")
+        button(id="submit-all") Submit all files

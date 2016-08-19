@@ -1,0 +1,16 @@
+extends ../layout
+
+block content
+    h1.
+        #{title}
+    form#formAddBlob(name="adddevice",method="post",action="/tasks/new_device")
+        p Group:
+            select(id="group", name="group")
+                each group, i in groups
+                    option(value="#{group._id}") #{group.description}
+        p SN:
+            input(type="text", name="serial")
+        p Description:
+            input(type="text", name="description")
+        p
+            button#btnSubmit(type="submit") submit

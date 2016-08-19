@@ -1,0 +1,21 @@
+extends ../layout
+
+block content
+    h1.
+        #{title}
+    form#formAddBlob(name="addtask",method="post",action="/tasks")
+        p Device:
+            select(id="taskDevice", name="device")
+                each device, i in devices
+                    option(value="#{device._id}") #{device.description}
+        p Type:
+            select(id="taskType", name="type")
+                each taskType, i in taskTypes
+                    option(value="#{taskType}") #{taskType}
+
+        p Content:
+            input(type="file", name="content")
+        p Date:
+            input#inputDate(type="datetime-local", name="date")
+        p
+            button#btnSubmit(type="submit") submit
