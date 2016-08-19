@@ -49,4 +49,4 @@ db.once('open', function() {
     mongoose.model('DeviceConfig', deviceConfigSchema);
 });
 
-mongoose.connect('mongodb://heroku_7qnm4gnx:n9uqk2lup7lsv010kni1u0g7fa@ds063715.mlab.com:63715/heroku_7qnm4gnx');
+mongoose.connect('mongodb://phm-box-server:1qaz2wsx@ds063715.mlab.com:63715/heroku_7qnm4gnx');
