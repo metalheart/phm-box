@@ -121,7 +121,7 @@ router.route('/add_task')
             type: "db.schedule"
         }, function (err, task) {
             if (err) {
-                res.send("There was a problem adding the information to the database.");
+                throw err;
             } else {
                 //Blob has been created
                 console.log('POST creating new device: ' + task);
@@ -147,7 +147,7 @@ router.route('/new_device')
             tags: taglist
         }, function (err, device) {
             if (err) {
-                res.send("There was a problem adding the information to the database.");
+                throw err;
             } else {
                 //Blob has been created
                 console.log('POST creating new device: ' + device);
@@ -176,7 +176,7 @@ router.route('/upload')
 
         sampleFile.mv(targetPath, function(err) {
             if (err) {
-                res.status(500).send(err);
+                throw err;
             }
             else {
                 var content = mongoose.model('Content').create({
@@ -185,7 +185,7 @@ router.route('/upload')
                     resource: targetPath
                 }, function (err, device) {
                     if (err) {
-                        console.log("Failed to create content item!")
+                        throw err;
                     } else {
                         res.location("admin");
                         res.redirect("/admin");
