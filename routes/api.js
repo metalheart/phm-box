@@ -121,7 +121,7 @@ router.route('/')
                                 for(var i in tasks)
                                 {
                                     var item = tasks[i];
-                                    payloadData.push({id: item._id, type: item.type, date: date2ts(item.scheduleDate), task_ts: date2ts(item.date), content_type: item.content.type, resource: item.content.resource});
+                                    payloadData.push({id: item._id, type: item.type, date: date2ts(item.scheduleDate), task_ts: date2ts(item.updatedAt), content_type: item.content.type, resource: item.content.resource});
                                 }
                                 
                                 device.lastSeen = new Date();
