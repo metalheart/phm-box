@@ -117,7 +117,7 @@ router.route('/add_task')
             device: _device,
             scheduleDate: _date,
             content: _content,
-            type: "db.schedule"
+            type: "schedule"
         }, function (err, task) {
             if (err) {
                 throw err;
