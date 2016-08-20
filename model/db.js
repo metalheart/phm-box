@@ -12,7 +12,8 @@ db.once('open', function() {
     // Create your schemas and models here.
     var contentScheme = new mongoose.Schema({
         type: { type: String, enum: ['image', 'video', 'slides', 'text/json'], required: true},
-        resource: { type: String, required: true}
+        resource: { type: String, required: true},
+        description: { type: String, required: true},
     });
     mongoose.model('Content', contentScheme);
 
@@ -25,7 +26,7 @@ db.once('open', function() {
     var deviceSchema = new mongoose.Schema({
         group: { type: mongoose.Schema.Types.ObjectId, required: false, ref: 'Group'},
         description: { type: String, required: true},
-        tags: { type: String, required: false},
+        tags: { type: String, default: 'new', required: false},
         serial: { type: String, required: true},
         balance: { type: Number, required: false},
         lastSeen: { type: Date, default: null, required: false }
@@ -34,10 +35,10 @@ db.once('open', function() {
 
     var taskScheduleSchema = new mongoose.Schema({
         device: { type: mongoose.Schema.Types.ObjectId, ref: 'Device', required: true},
-        type: { type: String, enum: ['schedule', 'sleep', 'restart'], required: true},
+        type: { type: String, enum: ['schedule', 'unschedule'], required: true},
         content: { type: mongoose.Schema.Types.ObjectId, ref: 'Content', required: true},
-        date: { type: Date, default: Date.now, required: true }, //scheduled date
-        void: { type: Boolean, default: false, required: true } //task became void and should be deleted
+        date: { type: Date, default: Date.now, required: true },
+        scheduleDate: { type: Date, default: null, required: false }
     });
     mongoose.model('TaskSchedule', taskScheduleSchema);
 
@@ -49,4 +50,5 @@ db.once('open', function() {
     mongoose.model('DeviceConfig', deviceConfigSchema);
 });
 
-mongoose.connect('mongodb://phm-box-server:1qaz2wsx@ds063715.mlab.com:63715/heroku_7qnm4gnx');
+//mongoose.connect('mongodb://phm-box-server:1qaz2wsx@ds063715.mlab.com:63715/heroku_7qnm4gnx');
+mongoose.connect(process.env.MONGODB_URI);

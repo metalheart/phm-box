@@ -34,13 +34,6 @@ router.route('/device_list')
                 } else {
                     //respond to both HTML and JSON. JSON responses require 'Accept: application/json;' in the Request Header
                     res.format({
-                        //HTML response will render the index.jade file in the views/blobs folder. We are also setting "blobs" to be an accessible variable in our jade view
-                        html: function(){
-                            res.render('admin/index', {
-                                title: 'All my tasks',
-                                "devices" : devices
-                            });
-                        },
                         //JSON response will show all blobs in JSON format
                         json: function(){
                             res.json(devices);
@@ -126,9 +119,10 @@ router.route('/add_task')
 
         mongoose.model('TaskSchedule').create({
             device: _device,
-            date: _date,
+            scheduleDate: _date,
+            date: Date.now(),
             content: _content,
-            type: "schedule"
+            type: "db.schedule"
         }, function (err, task) {
             if (err) {
                 res.send("There was a problem adding the information to the database.");
@@ -191,7 +185,8 @@ router.route('/upload')
             else {
                 var content = mongoose.model('Content').create({
                     type: "image",
-                    resource: sampleFile.name
+                    description: sampleFile.name,
+                    resource: targetPath
                 }, function (err, device) {
                     if (err) {
                         console.log("Failed to create content item!")

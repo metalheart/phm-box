@@ -52,7 +52,7 @@ block content
                 var strTasks = "";
                 for (var i in taskList) {
                     var task = taskList[i];
-                    strTasks += "<tr><td>" + task.type + "</td><td>" + task.content.resource + "</td><td>" + task.date + "</td>" + "</tr>";
+                    strTasks += "<tr><td>" + task.type + "</td><td>" + task.content.description + "</td><td>" + task.date + "</td>" + "</tr>";
                 }
                 var addScheduleStr = "<tr class='device-list-row-expand'><td></td><td></td><td colspan=4>" +
                 "<table><thead></thead>" +
@@ -68,7 +68,7 @@ block content
 
                 for (var i in contentList) {
                     var content = contentList[i];
-                    strOptions += "<option value='"+content._id+"'>" + content.resource + "</option>";
+                    strOptions += "<option value='"+content._id+"'>" + content.description + "</option>";
                 }
                 var addScheduleStr = "<tr class='device-list-row-expand'><td></td><td></td><td colspan=4>" +
                                 "<form id='setDeviceContentForm' onsubmit=\"setDeviceContent('');return false;\">" +
