@@ -51,4 +51,5 @@ db.once('open', function() {
 });
 
 //mongoose.connect('mongodb://phm-box-server:1qaz2wsx@ds063715.mlab.com:63715/heroku_7qnm4gnx');
+console.log('mongodb: connecting to ' + process.env.MONGODB_URI);
 mongoose.connect(process.env.MONGODB_URI);

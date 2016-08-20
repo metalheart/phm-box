@@ -45,12 +45,6 @@ router.route('/device_list')
 
 router.route('/')
     .get(function(req, res, next) {
-        /*
-        mongoose.model('Device').create({
-            description: 'device for test',
-            tags:'test',
-            serial: '12345'
-        });*/
 
         //retrieve all blobs from Monogo
         mongoose.model('Device').find({})
@@ -93,6 +87,7 @@ router.route('/content_list').get( function (req, res, next) {
 });
 
 router.route('/task_list').get( function (req, res, next) {
+    console.log("task_list: " + req.query.id);
     mongoose.model('TaskSchedule').find({device:req.query.id})
         .populate('device')
         .populate('content')
@@ -101,6 +96,7 @@ router.route('/task_list').get( function (req, res, next) {
                 return console.error(err);
             } else {
                 //respond to both HTML and JSON. JSON responses require 'Accept: application/json;' in the Request Header
+                console.log("task_list response: " + tasks);
                 res.format({
                     json: function () {
                         res.json(tasks);
