@@ -170,8 +170,9 @@ router.route('/upload')
 
         sampleFile = req.files.file;
         var filename = sampleFile.name;
+        var targetName = encodedFilename + path.extname(filename);
         var encodedFilename = crypto.createHash('md5').update(path.posix.basename(filename)).digest("hex");
-        var targetPath = path.join(__dirname, '../public/media/') + encodedFilename + path.extname(filename);
+        var targetPath = path.join(__dirname, '../public/media/') + targetName;
 
         sampleFile.mv(targetPath, function(err) {
             if (err) {
@@ -180,8 +181,8 @@ router.route('/upload')
             else {
                 var content = mongoose.model('Content').create({
                     type: "image",
-                    description: sampleFile.name,
-                    resource: targetPath
+                    description: filename,
+                    resource: targetName
                 }, function (err, device) {
                     if (err) {
                         throw err;
