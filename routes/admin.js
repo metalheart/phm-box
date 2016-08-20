@@ -169,9 +169,9 @@ router.route('/upload')
         }
 
         sampleFile = req.files.file;
-        var filename = sampleFile.name;
-        var targetName = encodedFilename + path.extname(filename);
+        var filename = sampleFile.name;        
         var encodedFilename = crypto.createHash('md5').update(path.posix.basename(filename)).digest("hex");
+        var targetName = encodedFilename + path.extname(filename);
         var targetPath = path.join(__dirname, '../public/media/') + targetName;
 
         sampleFile.mv(targetPath, function(err) {
