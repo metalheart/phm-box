@@ -116,7 +116,7 @@ router.route('/add_task')
         mongoose.model('TaskSchedule').create({
             device: _device,
             scheduleDate: _date,
-            date: Date.now(),
+            date: new Date(),
             content: _content,
             type: "db.schedule"
         }, function (err, task) {

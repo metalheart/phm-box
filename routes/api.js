@@ -124,11 +124,15 @@ router.route('/')
                                     payloadData.push({id: item._id, type: item.type, date: date2ts(item.scheduleDate), task_ts: date2ts(item.date), content_type: item.content.type, resource: item.content.resource});
                                 }
                                 
-                                //respond to both HTML and JSON. JSON responses require 'Accept: application/json;' in the Request Header
-                                res.format({
-                                    json: function(){
-                                        res.json({type: "tasks", payload: payloadData});
-                                    }
+                                device.lastSeen = new Date();
+                                device.save(function(err) {
+                                    if (err) throw err;
+                                    //respond to both HTML and JSON. JSON responses require 'Accept: application/json;' in the Request Header
+                                    res.format({
+                                        json: function(){
+                                            res.json({type: "tasks", payload: payloadData});
+                                        }
+                                    });
                                 });
                             }
                         });
