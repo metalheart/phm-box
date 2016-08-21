@@ -190,6 +190,7 @@ router.route('/upload')
                 throw err;
             }
             else {
+                console.log("Uploaded file stored at: " + targetPath);
                 var content = mongoose.model('Content').create({
                     type: mediatype,
                     description: filename,
