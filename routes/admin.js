@@ -179,9 +179,9 @@ router.route('/upload')
         var imageFormats = ['.jpg', '.png', '.gif'];
 
         var mediatype = 'application/json';
-        if (ext in videoFormats) {
+        if (videoFormats.indexOf(ext) > -1) {
             mediatype = 'video';
-        } else if (ext in imageFormats) {
+        } else if (imageFormats.indexOf(ext) > -1) {
             mediatype = 'image';
         }
 
