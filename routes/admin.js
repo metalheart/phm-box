@@ -175,7 +175,7 @@ router.route('/upload')
         var targetName = encodedFilename + ext;
         var targetPath = path.join(__dirname, '../public/media/') + targetName;
 
-        var videoFormats = ['.mp4','.mkv','.avi','.asf','.mov','.qt','.flv','.swf','.webm', '.ogg', '.3gp'];
+        var videoFormats = ['.mp4','.mkv','.avi','.asf','.mov','.qt','.flv','.swf','.webm', '.ogv', '.3gp'];
         var imageFormats = ['.jpg', '.png', '.gif'];
 
         var mediatype = 'application/json';
