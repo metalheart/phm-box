@@ -11,7 +11,7 @@ db.on('error', console.error);
 db.once('open', function() {
     // Create your schemas and models here.
     var contentScheme = new mongoose.Schema({
-        type: { type: String, enum: ['image', 'video', 'slides', 'text/json'], required: true},
+        type: { type: String, enum: ['image', 'video', 'application/json'], required: true},
         resource: { type: String, required: true},
         description: { type: String, required: true},
     });

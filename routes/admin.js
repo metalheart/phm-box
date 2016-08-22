@@ -171,18 +171,30 @@ router.route('/upload')
         }
 
         sampleFile = req.files.file;
-        var filename = sampleFile.name;        
+        var filename = sampleFile.name;
+        var ext = path.extname(filename).toLowerCase();
         var encodedFilename = crypto.createHash('md5').update(path.posix.basename(filename)).digest("hex");
-        var targetName = encodedFilename + path.extname(filename);
+        var targetName = encodedFilename + ext;
         var targetPath = path.join(__dirname, '../public/media/') + targetName;
+
+        var videoFormats = ['.mp4','.mkv','.avi','.asf','.mov','.qt','.flv','.swf','.webm', '.ogv', '.3gp'];
+        var imageFormats = ['.jpg', '.png', '.gif'];
+
+        var mediatype = 'application/json';
+        if (videoFormats.indexOf(ext) > -1) {
+            mediatype = 'video';
+        } else if (imageFormats.indexOf(ext) > -1) {
+            mediatype = 'image';
+        }
 
         sampleFile.mv(targetPath, function(err) {
             if (err) {
                 throw err;
             }
             else {
+                console.log("Uploaded file stored at: " + targetPath);
                 var content = mongoose.model('Content').create({
-                    type: "image",
+                    type: mediatype,
                     description: filename,
                     resource: targetName
                 }, function (err, device) {
