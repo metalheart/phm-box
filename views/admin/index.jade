@@ -5,41 +5,38 @@ block content
         link(href='stylesheets/base.min.css', rel='stylesheet')
         link(href='stylesheets/project.min.css', rel='stylesheet')
         link(href='stylesheets/jquery.datetimepicker.min.css', rel='stylesheet')
+        link(href='stylesheets/dropzone.css', rel='stylesheet')
         script(src="http://code.jquery.com/jquery-1.11.1.min.js")
         script(src="http://code.jquery.com/ui/1.11.0/jquery-ui.min.js")
         script(src="javascripts/jquery.datetimepicker.full.min.js")
         script(src="javascripts/dropzone.js")
-        script.
-            Dropzone.options.myDropzone = {
+
+        script(type='text/javascript').
+            Dropzone.options.uploadWidget = {
 
                 // Prevents Dropzone from uploading dropped files immediately
                 autoProcessQueue: true,
                 parallelUploads: 1,
                 uploadMultiple: false,
-                maxFiles: 1,
-
+                acceptedFiles: 'image/*',
                 init: function() {
-                    var submitButton = document.querySelector("#submit-all")
-                    myDropzone = this; // closure
-
-                    submitButton.addEventListener("click", function() {
-                        myDropzone.processQueue(); // Tell Dropzone to process all queued files.
-                });
-
-                // You might want to show the submit button only when
-                // files are dropped here:
-                this.on("addedfile", function() {
-                // Show submit button here and/or inform user to click it.
-                });
-
-                }
+                    this.on('success', function( file, resp ){
+                        loadDevices();
+                    });
+                },
             };
 
             function setDeviceContent(deviceId) {
+                var data = {
+                    content: $("#setDeviceContentForm [name=content]").val(),
+                    device: $("#setDeviceContentForm [name=device]").val(),
+                    //date: new Date($("#setDeviceContentForm [name=date]").val()).toISOString(),
+                    date: new Date().toISOString(),
+                    } 
                 $.ajax({
                     type: 'POST',
                     url: '/admin/add_task',
-                    data: $("#setDeviceContentForm").serialize(),
+                    data: data,
                     dataType: 'json',
                     success: function (data) {
                         $('.device-list-row-expand').remove();
@@ -52,7 +49,7 @@ block content
                 var strTasks = "";
                 for (var i in taskList) {
                     var task = taskList[i];
-                    strTasks += "<tr><td>" + task.type + "</td><td>" + task.content.description + "</td><td>" + task.date + "</td>" + "</tr>";
+                    strTasks += "<tr><td>" + task.type + "</td><td>" + task.content.description + "</td><td>" + new Date(task.scheduleDate).toLocaleString() + "</td>" + "</tr>";
                 }
                 var addScheduleStr = "<tr class='device-list-row-expand'><td></td><td></td><td colspan=4>" +
                 "<table><thead></thead>" +
@@ -76,8 +73,8 @@ block content
                                 strOptions +
                                 "</select>" +
                                 "<input type='hidden' name='device' value='"+deviceId+"'>" +
-                                "<input type='text' name='date' id='schedule_date'>" +
-                                "<input type='submit' value='Schedule'>" +
+                                //"<input type='text' name='date' id='schedule_date'>" +
+                                "<input type='submit' value='Schedule now!'>" +
                                 "</form>" +
                         "</td></tr>";
 
@@ -205,7 +202,5 @@ block content
                         td
                         td
                             button#btnSubmit(type="submit") add
-
-        button(id="refresh-all", onclick="loadDevices") Refresh
-        form(action="/admin/upload",class="dropzone" id="my-dropzone")
-        button(id="submit-all") Submit all files
+        
+        form(action="/admin/upload", class="dropzone", id="upload-widget")                    
