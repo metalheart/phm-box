@@ -113,6 +113,8 @@ router.route('/add_task')
         var _date = req.body.date;
         var _content = req.body.content;
 
+        console.log('!!!creating task on ' + _date);
+
         mongoose.model('TaskSchedule').create({
             device: _device,
             scheduleDate: _date,
