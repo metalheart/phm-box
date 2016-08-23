@@ -60,7 +60,7 @@ block content
                 return addScheduleStr;
             }
             function __setCurrentDate() {
-                $("#setDeviceContentForm [name=date]").val(new Date().toLocaleString())
+                $("#setDeviceContentForm [name=date]").val(new Date().toLocaleTimeString())
                 setDeviceContent('');
             }
 
