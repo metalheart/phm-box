@@ -27,12 +27,20 @@ block content
             };
 
             function setDeviceContent(deviceId) {
+                var dateStr = $("#setDeviceContentForm [name=date]").val();
+                var dateObj = new Date()
+
+                if (dateStr != '') {
+                    dateObj = new Date(dateStr);
+                }
+                
                 var data = {
                     content: $("#setDeviceContentForm [name=content]").val(),
                     device: $("#setDeviceContentForm [name=device]").val(),
-                    date: new Date($("#setDeviceContentForm [name=date]").val()).toISOString(),
+                    date: dateObj.toISOString(),
                     //date: new Date().toISOString(),
-                    } 
+                    }
+
                 $.ajax({
                     type: 'POST',
                     url: '/admin/add_task',
@@ -59,9 +67,8 @@ block content
 
                 return addScheduleStr;
             }
-            function __setCurrentDate() {
-                var now = new Date();
-                dateStr = now.getFullYear() + '-' + now.getMonth() + '-' + now.getDay() + 'T' + now.toLocaleTimeString();                
+            function __setCurrentDate() {                
+                var dateStr = ''
                 $("#setDeviceContentForm [name=date]").val(dateStr);
                 setDeviceContent('');
             }
