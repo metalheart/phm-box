@@ -61,7 +61,8 @@ block content
             }
             function __setCurrentDate() {
                 var now = new Date();
-                $("#setDeviceContentForm [name=date]").val(now.toLocaleDateString() + ' ' + now.toLocaleTimeString());
+                dateStr = now.getFullYear() + '-' + now.getMonth() + '-' + now.getDay() + 'T' + now.toLocaleTimeString();                
+                $("#setDeviceContentForm [name=date]").val(dateStr);
                 setDeviceContent('');
             }
 
