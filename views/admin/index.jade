@@ -61,7 +61,7 @@ block content
             }
             function __setCurrentDate() {
                 $("#setDeviceContentForm [name=date]").val(new Date().toLocaleString())
-                $("#setDeviceContentForm").submit()
+                setDeviceContent('');
             }
 
             function __deviceTaskAddFormText(deviceId, contentList) {
