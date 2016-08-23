@@ -18,7 +18,7 @@ block content
                 autoProcessQueue: true,
                 parallelUploads: 1,
                 uploadMultiple: false,
-                acceptedFiles: 'image/*',
+                acceptedFiles: 'image/*,video/*',
                 init: function() {
                     this.on('success', function( file, resp ){
                         loadDevices();
@@ -30,8 +30,8 @@ block content
                 var data = {
                     content: $("#setDeviceContentForm [name=content]").val(),
                     device: $("#setDeviceContentForm [name=device]").val(),
-                    //date: new Date($("#setDeviceContentForm [name=date]").val()).toISOString(),
-                    date: new Date().toISOString(),
+                    date: new Date($("#setDeviceContentForm [name=date]").val()).toISOString(),
+                    //date: new Date().toISOString(),
                     } 
                 $.ajax({
                     type: 'POST',
@@ -73,8 +73,9 @@ block content
                                 strOptions +
                                 "</select>" +
                                 "<input type='hidden' name='device' value='"+deviceId+"'>" +
-                                //"<input type='text' name='date' id='schedule_date'>" +
-                                "<input type='submit' value='Schedule now!'>" +
+                                "<input type='text' name='date' id='schedule_date'>" +
+                                "<input type='button' value='Now!' onclick='$(\"#setDeviceContentForm date\").val(new Date().toLocaleString())'>"
+                                "<input type='submit' value='Schedule!'>" +
                                 "</form>" +
                         "</td></tr>";
 
