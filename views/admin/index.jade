@@ -59,6 +59,10 @@ block content
 
                 return addScheduleStr;
             }
+            function __setCurrentDate() {
+                $("#setDeviceContentForm [name=date]").val(new Date().toLocaleString())
+                $("#setDeviceContentForm").submit()
+            }
 
             function __deviceTaskAddFormText(deviceId, contentList) {
                 var strOptions = "";
@@ -74,8 +78,8 @@ block content
                                 "</select>" +
                                 "<input type='hidden' name='device' value='"+deviceId+"'>" +
                                 "<input type='text' name='date' id='schedule_date'>" +
-                                "<input type='button' value='Now!' onclick='$(\"#setDeviceContentForm date\").val(new Date().toLocaleString())'>"
                                 "<input type='submit' value='Schedule!'>" +
+                                "<input type='button' value='Schedule now!' onclick='__setCurrentDate()'>" +
                                 "</form>" +
                         "</td></tr>";
 
