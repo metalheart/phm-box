@@ -1,0 +1,91 @@
+link(href='../stylesheets/materialize.min.css', rel='stylesheet')
+link(href='../stylesheets/test.css', rel='stylesheet')
+script(src="http://code.jquery.com/jquery-1.11.1.min.js")
+script(src="../javascripts/materialize.min.js")
+script(src="../javascripts/app.js")
+
+script(type='text/javascript').
+
+    var deviceList = new ListViewHelper()
+
+
+    $(document).ready(function() {
+        deviceList.init(
+            {
+                list: $('<div/>').html('<li class="device-list-item"><div id="_id" style="display: none;"/>' +
+                            '<div class="collapsible-header" id="serial"></div>' +                            
+                            '<div class="collapsible-body" style="display: block;">' +
+
+                            '<table><thead><tr><th data-field="light">Light</th><th data-field="humidity">Humidity</th>' +
+                            '<th data-field="temperature">Temperature</th><th data-field="balance">Balance</th>' +
+                            '<th data-field="imei">Imei</th><th data-field="phoneNumber">Phone Number</th>' +
+                            '</tr></thead><tbody><tr>' +
+                            '<td id="light">Alvin</td><td id="humidity">Alvin</td><td id="temperature">Alvin</td>' +
+                            '<td id="balance">Alvin</td><td id="imei">Alvin</td><td id="phoneNumber">Alvin</td>' +  
+                            '</tr></tbody></table>' +
+
+                            '<div id="viewcontent"/>' +
+
+                            '</div></li>'),
+
+                view: $('<div/>').html('<table><thead><tr><th data-field="light">Light</th><th data-field="humidity">Humidity</th>' +
+                        '<th data-field="temperature">Temperature</th><th data-field="balance">Balance</th>' +
+                        '<th data-field="imei">Imei</th><th data-field="phoneNumber">Phone Number</th>' +
+                        '</tr></thead><tbody><tr>' +
+                        '<td id="light">Alvin</td><td id="humidity">Alvin</td><td id="temperature">Alvin</td>' +
+                        '<td id="balance">Alvin</td><td id="imei">Alvin</td><td id="phoneNumber">Alvin</td>' +  
+                        '</tr></tbody></table>'
+                        ),
+
+                listCb: function(where, data) {
+                        $('.collapsible').collapsible();
+                        $('.device-list-item').click(function() {                            
+                            $('.device-list-item').not(this).removeClass('active');
+                            $(this).addClass('active');
+
+                            thiz = this;
+
+                            $.ajax({
+                                url: '/admin/task_list',
+                                data: {id: $(thiz).find('div#_id').text()},
+                                dataType: 'json',
+                                success: function (taskData) {                                    
+                                    deviceList.setView($(thiz).find('#viewcontent'), taskData);
+                                }
+                            });
+                            
+                            return true;
+                        });
+                },
+
+                viewCb:function(where, data) {
+
+                }
+            }
+        );
+
+        $.ajax({
+            url: '/admin/device_list',
+            data: {},
+            dataType: 'json',
+            success: function (deviceData) {
+                deviceList.setList($('#devicelist'), deviceData);
+            }
+        });
+    });
+ul(class="collapsible collapsible-accordion"  data-collapsible="accordion",id="devicelist")
+    li(class="device-list-item")
+        div(class="collapsible-header") Alvin
+        div(class="collapsible-body")
+            p.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+    li(class="device-list-item")
+        div(class="collapsible-header") Alvin
+        div(class="collapsible-body")
+            p.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+    li(class="device-list-item")
+        div(class="collapsible-header") Alvin
+        div(class="collapsible-body")
+            p.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.                              

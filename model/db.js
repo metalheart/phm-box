@@ -29,6 +29,11 @@ db.once('open', function() {
         tags: { type: String, default: 'new', required: false},
         serial: { type: String, required: true},
         balance: { type: Number, required: false},
+        light: { type: Number, required: false},
+        humidity: { type: Number, required: false},
+        temperature: { type: Number, required: false},
+        imei: { type: String, required: false},
+        phoneNumber: { type: String, required: false},
         lastSeen: { type: Date, default: null, required: false }
     });
     mongoose.model('Device', deviceSchema);

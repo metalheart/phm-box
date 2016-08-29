@@ -43,6 +43,26 @@ router.route('/device_list')
             });
     });
 
+router.route('/test')
+    .get(function(req, res, next) {
+
+        //retrieve all blobs from Monogo
+
+        //respond to both HTML and JSON. JSON responses require 'Accept: application/json;' in the Request Header
+        res.format({
+            //HTML response will render the index.jade file in the views/blobs folder. We are also setting "blobs" to be an accessible variable in our jade view
+            html: function(){
+                res.render('admin/test', {
+                    title: 'All my tasks'
+                });
+            },
+            //JSON response will show all blobs in JSON format
+            json: function(){
+                res.json(devices);
+            }
+        });
+    });
+
 router.route('/')
     .get(function(req, res, next) {
 

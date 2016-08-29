@@ -2,8 +2,10 @@ extends ../layout
 
 block content
     head
-        link(href='stylesheets/base.min.css', rel='stylesheet')
-        link(href='stylesheets/project.min.css', rel='stylesheet')
+        //.
+            link(href='stylesheets/ghpages-materialize.css', rel='stylesheet')
+        //.
+            link(href='stylesheets/prism.css', rel='stylesheet')
         link(href='stylesheets/jquery.datetimepicker.min.css', rel='stylesheet')
         link(href='stylesheets/dropzone.css', rel='stylesheet')
         script(src="http://code.jquery.com/jquery-1.11.1.min.js")
@@ -106,6 +108,7 @@ block content
                             data: '',
                             dataType: 'json',
                             success: function (data) {
+                                
                                 $(ele).after(__deviceTaskListFormText(deviceId, tasksData));
                                 $(ele).after(__deviceTaskAddFormText(deviceId, data));
                                 $('#schedule_date').datetimepicker();
@@ -122,12 +125,18 @@ block content
                     showDeviceTasksForm(deviceId, this);
                 })
             }
+
             function device2tr(device) {
                 return "<tr class='device-list-row' id='device#" + device._id + "'> <td></td>"+
+                        '<td>' + device.lastSeen + '</td>' +
                         '<td>' + device.serial + '</td>' +
                         '<td>' + device.description + '</td>' +
                         '<td>' + device.tags + '</td>' +
-                        '<td>' + device.lastSeen + '</td>' +
+                        '<td>' + device.light + '</td>' +
+                        '<td>' + device.humidity + '</td>' +
+                        '<td>' + device.temperature + '</td>' +
+                        '<td>' + device.phoneNumber + '</td>' +
+                        '<td>' + device.imei + '</td>' +
                         '<td>' + device.balance + '</td>' +
                         '</tr>';
             }
@@ -174,47 +183,26 @@ block content
             }
 
             $(document).ready(function() {
-                /*$('.edit_device_description').editable('/admin/device_edit', {
-                    name : 'description'
-                });
-
-                $('.edit_device_tags').editable('/admin/device_edit', {
-                    name: 'tags'
-                });*/
-
                 loadDevices();
                 jQuery('#schedule_date').datetimepicker();
-
-                /*var dropzone = new Dropzone(".dropzone");
-                dropzone.on("addedfile", function (file) {
-                });*/
             });
     body(class="page-brand")
         h1.
             #{title}
-        div(class="table-responsive")
+        div(class="highlight")
             table(class="table")
                 thead
                     tr
-                        th -
+                        th last seen
                         th serial
                         th description
                         th tags
-                        th last seen
+                        th light
+                        th humidity
+                        th temperature
+                        th #
+                        th imei
                         th balance
                 tbody#deviceListTableBody
-
-                tbody#addDeviceTableBody
-                    form#addNewDevice(name="adddevice",method="post",onsubmit="postForm('/admin/new_device', 'addNewDevice', addDevice);return false;")
-                        td
-                        td
-                            input(type="text", name="serial")
-                        td
-                            input(type="text", name="description")
-                        td
-                            input(type="text", name="tags")
-                        td
-                        td
-                            button#btnSubmit(type="submit") add
         
         form(action="/admin/upload", class="dropzone", id="upload-widget")                    
