@@ -1,17 +1,18 @@
 extends ../layout
 
 block content
-    head
-        //.
-            link(href='stylesheets/ghpages-materialize.css', rel='stylesheet')
+    head        
+        link(href='stylesheets/materialize.min.css', rel='stylesheet')
         //.
             link(href='stylesheets/prism.css', rel='stylesheet')
         link(href='stylesheets/jquery.datetimepicker.min.css', rel='stylesheet')
         link(href='stylesheets/dropzone.css', rel='stylesheet')
-        script(src="http://code.jquery.com/jquery-1.11.1.min.js")
-        script(src="http://code.jquery.com/ui/1.11.0/jquery-ui.min.js")
+        link(href='https://fonts.googleapis.com/icon?family=Material+Icons', rel='stylesheet')
+        script(src="javascripts/jquery-1.11.1.min.js")
+        script(src="javascripts/jquery-ui.min.js")
         script(src="javascripts/jquery.datetimepicker.full.min.js")
         script(src="javascripts/dropzone.js")
+        script(src="javascripts/materialize.min.js")
 
         script(type='text/javascript').
             Dropzone.options.uploadWidget = {
@@ -50,7 +51,7 @@ block content
                     dataType: 'json',
                     success: function (data) {
                         $('.device-list-row-expand').remove();
-                        showDeviceTasksForm(data.device, $('.device-list-row'));
+                        showDeviceTasksForm(data.device, $('.device-list-row.selected'));
                     }
                 });
             }
@@ -82,15 +83,18 @@ block content
                     var content = contentList[i];
                     strOptions += "<option value='"+content._id+"'>" + content.description + "</option>";
                 }
-                var addScheduleStr = "<tr class='device-list-row-expand'><td></td><td></td><td colspan=4>" +
+                var addScheduleStr = "<tr class='device-list-row-expand'><td/><td colspan=9>" +
                                 "<form id='setDeviceContentForm' onsubmit=\"setDeviceContent('');return false;\">" +
-                                "<select name='content'>" +
+                                "<div class='row'>" +
+                                "<div class='input-field col s3'><select id='content' name='content'>" +
                                 strOptions +
-                                "</select>" +
+                                "</select><label for='content'>Select media</label></div>" +
                                 "<input type='hidden' name='device' value='"+deviceId+"'>" +
-                                "<input type='text' name='date' id='schedule_date'>" +
-                                "<input type='submit' value='Schedule!'>" +
-                                "<input type='button' value='Schedule now!' onclick='__setCurrentDate()'>" +
+                                "<div class='input-field col s2'><input type='text' name='date' id='schedule_date'>" +
+                                "<label for='schedule_date'>Schedule date (now)</label></div>" +
+                                "<div class='input-field col s4'>" +
+                                "<button class='btn waves-effect waves-light' type='submit' name='action'>Schedule!<i class='material-icons right'>send</i></button>"                                                                 
+                                "</div>" +
                                 "</form>" +
                         "</td></tr>";
 
@@ -112,6 +116,9 @@ block content
                                 $(ele).after(__deviceTaskListFormText(deviceId, tasksData));
                                 $(ele).after(__deviceTaskAddFormText(deviceId, data));
                                 $('#schedule_date').datetimepicker();
+                                $(document).ready(function() {
+                                    $('select').material_select();
+                                });
                             }
                         });
                     }
@@ -121,8 +128,13 @@ block content
             function setDeviceListClickHandler() {
                 $('.device-list-row').click(function () {
                     $('.device-list-row-expand').remove();
-                    var deviceId = this.id.split('#', 2)[1];
-                    showDeviceTasksForm(deviceId, this);
+                    if ($(this).hasClass('selected')) {
+                        $(this).removeClass('selected');
+                    } else {
+                        $(this).addClass('selected');
+                        var deviceId = this.id.split('#', 2)[1];
+                        showDeviceTasksForm(deviceId, this);
+                    }                                                            
                 })
             }
 
@@ -147,6 +159,7 @@ block content
 
             function buildDeviceList(jsonObj) {
                 //var jsonObj = $.parseJSON(data);
+                $('.device-list-row-expand').remove();
 
                 var tableBody = $('#deviceListTableBody');
                 tableBody.empty();

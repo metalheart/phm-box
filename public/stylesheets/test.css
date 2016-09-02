@@ -1,0 +1,16 @@
+    
+/*
+device_list.jade template
+*/
+
+ul.collapsible li.device-list-item {
+    transition: background .25s ease;
+    }
+
+ul.collapsible li div.collapsible-header:hover {
+    background-color: #f2f2f2;
+    }
+
+ul.collapsible li.device-list-item.active div.collapsible-header {
+    background-color: #f2f2f2;
+    }    
