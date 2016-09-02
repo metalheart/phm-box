@@ -48,6 +48,7 @@ block content
                     type: 'POST',
                     url: '/admin/add_task',
                     data: data,
+                    type: 'schedule',
                     dataType: 'json',
                     success: function (data) {
                         $('.device-list-row-expand').remove();
@@ -56,11 +57,37 @@ block content
                 });
             }
 
+            function addDeviceUpdate(deviceId) {
+                var dateStr = $("#setDeviceContentForm [name=date]").val();
+                var dateObj = new Date()
+
+                if (dateStr != '') {
+                    dateObj = new Date(dateStr);
+                }
+                
+                var data = {                    
+                    device: $("#setDeviceContentForm [name=device]").val(),
+                    date: dateObj.toISOString(),
+                    type: 'update',                    
+                    }
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/admin/add_task',
+                    data: data,
+                    dataType: 'json',
+                    success: function (data) {
+                        $('.device-list-row-expand').remove();
+                        showDeviceTasksForm(data.device, $('.device-list-row.selected'));
+                    }
+                });
+            }            
+
             function __deviceTaskListFormText(deviceId, taskList) {
                 var strTasks = "";
                 for (var i in taskList) {
                     var task = taskList[i];
-                    strTasks += "<tr><td>" + task.type + "</td><td>" + task.content.description + "</td><td>" + new Date(task.scheduleDate).toLocaleString() + "</td>" + "</tr>";
+                    strTasks += "<tr><td>" + task.type + "</td><td>" + (task.content != null ? task.content.description : '') + "</td><td>" + new Date(task.scheduleDate).toLocaleString() + "</td>" + "</tr>";
                 }
                 var addScheduleStr = "<tr class='device-list-row-expand'><td></td><td></td><td colspan=4>" +
                 "<table><thead></thead>" +
@@ -84,17 +111,20 @@ block content
                     strOptions += "<option value='"+content._id+"'>" + content.description + "</option>";
                 }
                 var addScheduleStr = "<tr class='device-list-row-expand'><td/><td colspan=9>" +
-                                "<form id='setDeviceContentForm' onsubmit=\"setDeviceContent('');return false;\">" +
+                                "<form class='col s9' id='setDeviceContentForm' onsubmit=\"setDeviceContent('');return false;\">" +
                                 "<div class='row'>" +
                                 "<div class='input-field col s3'><select id='content' name='content'>" +
                                 strOptions +
                                 "</select><label for='content'>Select media</label></div>" +
                                 "<input type='hidden' name='device' value='"+deviceId+"'>" +
                                 "<div class='input-field col s2'><input type='text' name='date' id='schedule_date'>" +
-                                "<label for='schedule_date'>Schedule date (now)</label></div>" +
+                                "<label for='schedule_date'>Schedule date(now)</label></div>" +
                                 "<div class='input-field col s4'>" +
-                                "<button class='btn waves-effect waves-light' type='submit' name='action'>Schedule!<i class='material-icons right'>send</i></button>"                                                                 
+                                "<button class='btn waves-effect waves-light' type='submit' name='action'>Schedule!<i class='material-icons right'>send</i></button>" +                                                                                                  
                                 "</div>" +
+                                "<div class='row'><div class='input-field col s6'>" +
+                                "<button class='btn waves-effect waves-light' type='button' name='action' onclick='addDeviceUpdate()'>Update  <i class='material-icons right s2'>send</i></button>" +
+                                "</div></div>" +                                
                                 "</form>" +
                         "</td></tr>";
 

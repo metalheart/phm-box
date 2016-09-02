@@ -132,6 +132,7 @@ router.route('/add_task')
         var _device = req.body.device;
         var _date = req.body.date;
         var _content = req.body.content;
+        var _type = req.body.type;
 
         console.log('!!!creating task on ' + _date);
 
@@ -139,7 +140,7 @@ router.route('/add_task')
             device: _device,
             scheduleDate: _date,
             content: _content,
-            type: "schedule"
+            type: _type
         }, function (err, task) {
             if (err) {
                 throw err;

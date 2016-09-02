@@ -40,8 +40,8 @@ db.once('open', function() {
 
     var taskScheduleSchema = new mongoose.Schema({
         device: { type: mongoose.Schema.Types.ObjectId, ref: 'Device', required: true},
-        type: { type: String, enum: ['schedule', 'unschedule'], required: true},
-        content: { type: mongoose.Schema.Types.ObjectId, ref: 'Content', required: true},
+        type: { type: String, enum: ['schedule', 'unschedule', 'update', 'setconfig'], required: true},
+        content: { type: mongoose.Schema.Types.ObjectId, ref: 'Content', default: null, required: false},
         scheduleDate: { type: Date, default: null, required: false }
     },
     {
