@@ -139,7 +139,7 @@ router.route('/add_task')
         mongoose.model('TaskSchedule').create({
             device: _device,
             scheduleDate: _date,
-            content: _content,
+            content: _type == 'update' ? null :_content,
             type: _type
         }, function (err, task) {
             if (err) {
@@ -154,6 +154,27 @@ router.route('/add_task')
                 });
             }
         })
+    });
+
+router.route('/delete_task')
+    .post(function(req, res) {
+        // Get values from POST request. These can be done through forms or REST calls. These rely on the "name" attributes for forms
+        var _id = req.body.id;        
+
+        mongoose.model('TaskSchedule').findById(_id, function(err, task) {
+            if (err) {
+                throw err;
+            } else {
+                //Blob has been created
+                task.remove( function (err, task) {
+                    res.format({
+                        json: function(){
+                            res.json(task);
+                        }
+                    });
+                });
+            }
+        });
     });
 
 router.route('/new_device')
