@@ -117,9 +117,16 @@ router.route('/task_list').get( function (req, res, next) {
             } else {
                 //respond to both HTML and JSON. JSON responses require 'Accept: application/json;' in the Request Header
                 console.log("task_list response: " + tasks);
+                filteredTasks = [];
+                for (var i in tasks) {
+                    var task = tasks[i];
+                    if (path.existsSync(path.join(__dirname, '../public/media/') + task.content.resource)) {
+                        filteredTasks.push(task);
+                    }
+                }
                 res.format({
                     json: function () {
-                        res.json(tasks);
+                        res.json(filteredTasks);
                     }
                 });
             }
