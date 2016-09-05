@@ -9,7 +9,8 @@ var express = require('express'),
     bodyParser = require('body-parser'), //parses information from POST
     methodOverride = require('method-override'), //used to manipulate POST
     fileUpload = require('express-fileupload'),
-    path = require('path');
+    path = require('path'),
+    fs = require('fs');
 
 router.use(fileUpload());
 
@@ -120,7 +121,7 @@ router.route('/task_list').get( function (req, res, next) {
                 filteredTasks = [];
                 for (var i in tasks) {
                     var task = tasks[i];
-                    if (path.existsSync(path.join(__dirname, '../public/media/') + task.content.resource)) {
+                    if (fs.existsSync(path.join(__dirname, '../public/media/') + task.content.resource)) {
                         filteredTasks.push(task);
                     }
                 }
